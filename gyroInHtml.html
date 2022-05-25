@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title></title>
+    
+  </head>
+  <body>
+    <canvas id="canvas"width="1080"height="1300"style='border :2px solid blue;'></canvas>
+  <script>
+let gyroscope = new Gyroscope({frequency: 60});
+
+gyroscope.addEventListener('reading', e => {
+v.y=  gyroscope.x*240;
+v.x=gyroscope.y*240;
+  
+});
+gyroscope.start();
+
+   // sub two vec  
+ var canvas=document.getElementById('canvas');
+ var ctx=canvas.getContext('2d');
+ 
+  var v={
+    x:30,
+    y:0
+    };
+    var ad=0;
+    var m;
+    var b=0;
+   
+    function update(){
+      m=Math.sqrt(v.x*v.x+v.y*v.y);
+ var ar=Math.atan2(v.x,v.y);
+  ad=Math.round(ar*180/Math.PI);
+  
+    }
+  function changeAngle(a){
+    this.a=a*(Math.PI/180);
+    v.x=Math.cos(this.a)*m;
+    v.y=Math.sin(this.a)*m;
+  this.update();
+  }
+  function drawLine(){
+ 
+  ctx.beginPath();
+  ctx.lineWidth=12;
+ ctx.strokeStyle="green";
+  ctx.moveTo(canvas.width/2,canvas.height/2);
+  ctx.lineTo(canvas.width/2+v.x,canvas.height/2+v.y);
+  
+  ctx.stroke();
+  ctx.closePath();
+  ctx.arc(canvas.width/2+v.x,canvas.height/2+v.y,25,0,Math.PI*2);
+  ctx.fillStyle="red";
+  ctx.fill();
+  }
+  function drawAxis(){
+   ctx.strokeStyle="grey";
+  ctx.beginPath();
+  ctx.moveTo(canvas.width/2,0);
+  ctx.lineTo(canvas.width/2,canvas.height);
+  ctx.stroke();
+  ctx.closePath();
+  ctx.beginPath();
+  ctx.moveTo(0,canvas.height/2);
+  ctx.lineTo(canvas.width,canvas.height/2);
+  ctx.stroke();
+  ctx.closePath();
+  }
+  b=270;
+  update(); //intialize vx and vy
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+      drawAxis();
+    drawLine();
+    
+  
+   
+    ctx.fillText("vx"+v.x,40,50);
+    ctx.fillText("vy"+v.y,40,70);
+    window.requestAnimationFrame(animate);
+  }
+  animate();
+  </script>
+  </body>
+</html>
